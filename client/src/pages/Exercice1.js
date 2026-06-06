@@ -12,15 +12,20 @@ function Exercice1() {
   const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
-    const provider = new Web3.providers.HttpProvider('HTTP://127.0.0.1:9545');
     async function initWeb3() {
-      const instanceWeb3 = new Web3(provider);
-      const networkId = await instanceWeb3.eth.net.getId();
-      const deployedNetwork = Exercice1Contract.networks[networkId];
+      if (!window.ethereum) {
+        alert("MetaMask n'est pas installé !");
+        return;
+      }
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
+      const instanceWeb3 = new Web3(window.ethereum);
+      const accounts = await instanceWeb3.eth.getAccounts();
+      const ids = Object.keys(Exercice1Contract.networks);
+      const deployedNetwork = Exercice1Contract.networks[ids[0]];
       const contract = new instanceWeb3.eth.Contract(Exercice1Contract.abi, deployedNetwork.address);
-      setState({ web3: instanceWeb3, contract: contract });
+      setState({ web3: instanceWeb3, contract: contract, account: accounts[0] });
     }
-    provider && initWeb3();
+    initWeb3();
   }, []);
 
   const addition1 = async () => {
@@ -36,34 +41,48 @@ function Exercice1() {
   };
 
   return (
-    <div>
-      <div style={{ background: '#1a56db', color: 'white', padding: '1.5rem', textAlign: 'center' }}>
-        <h1 style={{ fontSize: '20px' }}>Exercice 1 : Somme de deux variables</h1>
-      </div>
-      <div style={{ padding: '2rem', maxWidth: '700px', margin: '0 auto' }}>
-        <div style={{ background: 'white', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '1.5rem', marginBottom: '1rem' }}>
-          <h2 style={{ fontSize: '16px', marginBottom: '1rem' }}>addition1() — somme des variables d'état</h2>
-          <button onClick={addition1} style={{ background: '#1a56db', color: 'white', border: 'none', borderRadius: '8px', padding: '8px 20px', cursor: 'pointer' }}>
-            Calculer
-          </button>
+    <div className="exo-page">
+      <header className="exo-entete">
+        <span className="exo-num">Exercice 1</span>
+        <h1 className="exo-titre">Somme de deux variables</h1>
+      </header>
+
+      <div className="exo-contenu">
+        <div className="exo-bloc">
+          <h2 className="exo-bloc-titre">addition1() — somme des variables d'état</h2>
+          <button className="exo-btn" onClick={addition1}>Calculer</button>
         </div>
-        <div style={{ background: 'white', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '1.5rem', marginBottom: '1rem' }}>
-          <h2 style={{ fontSize: '16px', marginBottom: '1rem' }}>addition2() — somme de deux paramètres</h2>
-          <input type="number" placeholder="Nombre 1" value={num1} onChange={e => setNum1(e.target.value)}
-            style={{ border: '1px solid #e2e8f0', borderRadius: '8px', padding: '8px', marginRight: '10px', width: '120px' }} />
-          <input type="number" placeholder="Nombre 2" value={num2} onChange={e => setNum2(e.target.value)}
-            style={{ border: '1px solid #e2e8f0', borderRadius: '8px', padding: '8px', marginRight: '10px', width: '120px' }} />
-          <button onClick={addition2} style={{ background: '#1a56db', color: 'white', border: 'none', borderRadius: '8px', padding: '8px 20px', cursor: 'pointer' }}>
-            Calculer
-          </button>
+
+        <div className="exo-bloc">
+          <h2 className="exo-bloc-titre">addition2() — somme de deux paramètres</h2>
+          <div className="exo-form">
+            <input
+              type="number"
+              placeholder="Nombre 1"
+              value={num1}
+              onChange={e => setNum1(e.target.value)}
+              className="exo-input"
+            />
+            <input
+              type="number"
+              placeholder="Nombre 2"
+              value={num2}
+              onChange={e => setNum2(e.target.value)}
+              className="exo-input"
+            />
+            <button className="exo-btn" onClick={addition2}>Calculer</button>
+          </div>
         </div>
+
         {result && (
-          <div style={{ background: '#e6f1fb', border: '1px solid #1a56db', borderRadius: '8px', padding: '1rem', marginBottom: '1rem', color: '#1a56db', fontWeight: '500' }}>
+          <div className="exo-resultat">
             Résultat : {result}
           </div>
         )}
-        <Link to="/" style={{ color: '#1a56db', fontSize: '14px' }}>← Sommaire</Link>
+
+        <Link to="/exercices" className="exo-retour">← Exercices</Link>
       </div>
+
       <BlockchainInfo web3={state.web3} transactions={transactions} />
     </div>
   );

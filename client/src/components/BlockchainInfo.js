@@ -13,7 +13,7 @@ function BlockchainInfo({ web3, transactions }) {
       const blockNumber = await web3.eth.getBlockNumber();
       const block = await web3.eth.getBlock(blockNumber);
       const networkId = await web3.eth.net.getId();
-      setNetworkInfo({ url: 'HTTP://127.0.0.1:9545', id: networkId.toString() });
+      setNetworkInfo({ url: 'http://127.0.0.1:7545', id: networkId.toString() });
       setBlockInfo(block);
     }
     fetchInfo();
@@ -67,7 +67,7 @@ function BlockchainInfo({ web3, transactions }) {
                 <div style={style.row}><span style={style.label}>Hash : </span>{tx.transactionHash}</div>
                 <div style={style.row}><span style={style.label}>Gas utilisé : </span>{tx.gasUsed?.toString()}</div>
                 <div style={style.row}><span style={style.label}>Bloc : </span>{tx.blockNumber?.toString()}</div>
-                <div style={style.row}><span style={style.label}>Statut : </span>{tx.status ? '✅ Succès' : '❌ Échec'}</div>
+                <div style={style.row}><span style={style.label}>Statut : </span>{tx.status ? ' Succès' : ' Reject'}</div>
               </div>
             ))
           ) : (
