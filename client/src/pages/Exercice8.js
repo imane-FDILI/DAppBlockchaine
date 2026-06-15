@@ -19,18 +19,8 @@ function Exercice8() {
       await window.ethereum.request({ method: 'eth_requestAccounts' });
       const instanceWeb3 = new Web3(window.ethereum);
       const accounts = await instanceWeb3.eth.getAccounts();
-
-      const networkId = (await instanceWeb3.eth.net.getId()).toString();
-      let deployedNetwork = PaymentContract.networks[networkId];
-      if (!deployedNetwork) {
-        const ids = Object.keys(PaymentContract.networks);
-        if (ids.length === 0) {
-          setResult("Erreur : le contrat n'est pas déployé. Lancez 'truffle migrate --reset'.");
-          return;
-        }
-        deployedNetwork = PaymentContract.networks[ids[ids.length - 1]];
-      }
-
+      const networkId = await instanceWeb3.eth.net.getId();
+      const deployedNetwork = PaymentContract.networks[networkId];
       const contract = new instanceWeb3.eth.Contract(PaymentContract.abi, deployedNetwork.address);
       setState({ web3: instanceWeb3, contract: contract, account: accounts[0] });
     }
@@ -38,28 +28,19 @@ function Exercice8() {
   }, []);
 
   const receivePayment = async () => {
-    if (!state.web3 || !state.contract) { setResult("Connexion non prête. Rechargez la page et reconnectez MetaMask."); return; }
-    try {
-      const valeurWei = state.web3.utils.toWei(montant || '0', 'ether');
-      const recu = await state.contract.methods.receivePayment().send({ from: state.account, value: valeurWei });
-      setTransactions([recu, ...transactions]);
-      setResult('Paiement de ' + montant + ' ETH reçu');
-    } catch (e) {
-      setResult('Transaction annulée ou échouée : ' + (e.message || e));
-    }
+    const { web3, contract, account } = state;
+    const valeurWei = web3.utils.toWei(montant || '0', 'ether');
+    const recu = await contract.methods.receivePayment().send({ from: account, value: valeurWei });
+    setTransactions([recu, ...transactions]);
+    setResult('Paiement de ' + montant + ' ETH reçu');
   };
   const withdraw = async () => {
-    if (!state.contract) { setResult("Connexion non prête. Rechargez la page et reconnectez MetaMask."); return; }
-    try {
-      const recu = await state.contract.methods.withdraw().send({ from: state.account });
-      setTransactions([recu, ...transactions]);
-      setResult('Retrait effectué');
-    } catch (e) {
-      setResult('Transaction annulée ou échouée : ' + (e.message || e));
-    }
+    const { contract, account } = state;
+    const recu = await contract.methods.withdraw().send({ from: account });
+    setTransactions([recu, ...transactions]);
+    setResult('Retrait effectué');
   };
   const voirRecipient = async () => {
-    if (!state.contract) { setResult("Connexion non prête. Rechargez la page et reconnectez MetaMask."); return; }
     const res = await state.contract.methods.recipient().call();
     setResult('Destinataire : ' + res);
   };

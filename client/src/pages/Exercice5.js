@@ -8,7 +8,7 @@ function Exercice5() {
   const [state, setState] = useState({ web3: null, contract: null, account: null });
   const [nombre, setNombre] = useState('');
   const [result, setResult] = useState('');
-  const [transactions, setTransactions] = useState([]);
+  const [transactions] = useState([]);
 
   useEffect(() => {
     async function initWeb3() {
@@ -20,23 +20,13 @@ function Exercice5() {
       const instanceWeb3 = new Web3(window.ethereum);
       const accounts = await instanceWeb3.eth.getAccounts();
       const networkId = await instanceWeb3.eth.net.getId();
-
-      console.log("=== DEBUG EXERCICE 5 ===");
-      console.log("networkId =", networkId, "type:", typeof networkId);
-      console.log("networks dispo =", Exercice5Contract.networks);
-      console.log("cles =", Object.keys(Exercice5Contract.networks));
-
-      const ids = Object.keys(Exercice5Contract.networks);
-      const deployedNetwork = Exercice5Contract.networks[ids[ids.length - 1]];
-      console.log("deployedNetwork =", deployedNetwork);
-
+      const deployedNetwork = Exercice5Contract.networks[networkId];
       const contract = new instanceWeb3.eth.Contract(Exercice5Contract.abi, deployedNetwork.address);
-      console.log("contract cree =", contract);
       setState({ web3: instanceWeb3, contract: contract, account: accounts[0] });
     }
     initWeb3();
   }, []);
-  
+
   const estPair = async () => {
     const res = await state.contract.methods.estPair(nombre).call();
     setResult('Le nombre ' + nombre + ' est : ' + res);

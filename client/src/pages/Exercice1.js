@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Web3 from 'web3';
@@ -5,11 +6,11 @@ import Exercice1Contract from '../contracts/Exercice1.json';
 import BlockchainInfo from '../components/BlockchainInfo';
 
 function Exercice1() {
-  const [state, setState] = useState({ web3: null, contract: null });
+  const [state, setState] = useState({ web3: null, contract: null, account: null });
   const [result, setResult] = useState('');
   const [num1, setNum1] = useState('');
   const [num2, setNum2] = useState('');
-  const [transactions, setTransactions] = useState([]);
+  const [transactions] = useState([]);
 
   useEffect(() => {
     async function initWeb3() {
@@ -20,8 +21,8 @@ function Exercice1() {
       await window.ethereum.request({ method: 'eth_requestAccounts' });
       const instanceWeb3 = new Web3(window.ethereum);
       const accounts = await instanceWeb3.eth.getAccounts();
-      const ids = Object.keys(Exercice1Contract.networks);
-      const deployedNetwork = Exercice1Contract.networks[ids[0]];
+      const networkId = await instanceWeb3.eth.net.getId();
+      const deployedNetwork = Exercice1Contract.networks[networkId];
       const contract = new instanceWeb3.eth.Contract(Exercice1Contract.abi, deployedNetwork.address);
       setState({ web3: instanceWeb3, contract: contract, account: accounts[0] });
     }

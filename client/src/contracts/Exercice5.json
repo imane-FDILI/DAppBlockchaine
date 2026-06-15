@@ -2210,12 +2210,12 @@
     "1337": {
       "events": {},
       "links": {},
-      "address": "0x3813BC9fe147918008a3D7c6a7e3CDDd1aDD49Dc",
-      "transactionHash": "0x2c28bfb2ac9ecd58f1cf42770fc1ff9f789f8c2197767064ba5909bf2f375a01"
+      "address": "0x835fA0d266a27345cc41ECAF31Afd46393949bbC",
+      "transactionHash": "0x05facb7134f2e8913bd6c2c508bec767380aa52d0f337ab2b89541fcc26c0b21"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2026-06-14T23:12:31.152Z",
+  "updatedAt": "2026-06-15T00:40:00.211Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

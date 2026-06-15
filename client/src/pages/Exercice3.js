@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Web3 from 'web3';
 import GestionChainesContract from '../contracts/GestionChaines.json';
 import BlockchainInfo from '../components/BlockchainInfo';
+
 function Exercice3() {
   const [state, setState] = useState({ web3: null, contract: null, account: null });
   const [chaine1, setChaine1] = useState('');
@@ -19,18 +20,8 @@ function Exercice3() {
       await window.ethereum.request({ method: 'eth_requestAccounts' });
       const instanceWeb3 = new Web3(window.ethereum);
       const accounts = await instanceWeb3.eth.getAccounts();
-
-      const networkId = (await instanceWeb3.eth.net.getId()).toString();
-      let deployedNetwork = GestionChainesContract.networks[networkId];
-      if (!deployedNetwork) {
-        const ids = Object.keys(GestionChainesContract.networks);
-        if (ids.length === 0) {
-          setResult("Erreur : le contrat n'est pas déployé. Lancez 'truffle migrate --reset'.");
-          return;
-        }
-        deployedNetwork = GestionChainesContract.networks[ids[ids.length - 1]];
-      }
-
+      const networkId = await instanceWeb3.eth.net.getId();
+      const deployedNetwork = GestionChainesContract.networks[networkId];
       const contract = new instanceWeb3.eth.Contract(GestionChainesContract.abi, deployedNetwork.address);
       setState({ web3: instanceWeb3, contract: contract, account: accounts[0] });
     }
@@ -38,32 +29,24 @@ function Exercice3() {
   }, []);
 
   const setMessage = async () => {
-    if (!state.contract) { setResult("Contrat non chargé. Vérifiez MetaMask et le réseau Ganache."); return; }
-    try {
-      const recu = await state.contract.methods.setMessage(chaine1).send({ from: state.account });
-      setTransactions([recu, ...transactions]);
-      setResult('Message enregistré : ' + chaine1);
-    } catch (e) {
-      setResult('Transaction annulée ou échouée : ' + (e.message || e));
-    }
+    const { contract, account } = state;
+    const recu = await contract.methods.setMessage(chaine1).send({ from: account });
+    setTransactions([recu, ...transactions]);
+    setResult('Message enregistré : ' + chaine1);
   };
   const getMessage = async () => {
-    if (!state.contract) { setResult("Contrat non chargé. Vérifiez MetaMask et le réseau Ganache."); return; }
     const res = await state.contract.methods.getMessage().call();
     setResult('Message actuel : ' + res);
   };
   const concatener = async () => {
-    if (!state.contract) { setResult("Contrat non chargé. Vérifiez MetaMask et le réseau Ganache."); return; }
     const res = await state.contract.methods.concatener(chaine1, chaine2).call();
     setResult('Concaténation : ' + res);
   };
   const longueur = async () => {
-    if (!state.contract) { setResult("Contrat non chargé. Vérifiez MetaMask et le réseau Ganache."); return; }
     const res = await state.contract.methods.longueur(chaine1).call();
     setResult('Longueur : ' + res.toString());
   };
   const comparer = async () => {
-    if (!state.contract) { setResult("Contrat non chargé. Vérifiez MetaMask et le réseau Ganache."); return; }
     const res = await state.contract.methods.comparer(chaine1, chaine2).call();
     setResult(res ? 'Les deux chaînes sont IDENTIQUES' : 'Les deux chaînes sont DIFFERENTES');
   };
