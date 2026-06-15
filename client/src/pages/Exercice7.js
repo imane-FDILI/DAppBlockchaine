@@ -20,8 +20,18 @@ function Exercice7() {
       await window.ethereum.request({ method: 'eth_requestAccounts' });
       const instanceWeb3 = new Web3(window.ethereum);
       const accounts = await instanceWeb3.eth.getAccounts();
-      const networkId = await instanceWeb3.eth.net.getId();
-      const deployedNetwork = RectangleContract.networks[networkId];
+
+      const networkId = (await instanceWeb3.eth.net.getId()).toString();
+      let deployedNetwork = RectangleContract.networks[networkId];
+      if (!deployedNetwork) {
+        const ids = Object.keys(RectangleContract.networks);
+        if (ids.length === 0) {
+          setResult("Erreur : le contrat n'est pas déployé. Lancez 'truffle migrate --reset'.");
+          return;
+        }
+        deployedNetwork = RectangleContract.networks[ids[ids.length - 1]];
+      }
+
       const contract = new instanceWeb3.eth.Contract(RectangleContract.abi, deployedNetwork.address);
       setState({ web3: instanceWeb3, contract: contract, account: accounts[0] });
     }
@@ -29,26 +39,34 @@ function Exercice7() {
   }, []);
 
   const surface = async () => {
+    if (!state.contract) { setResult("Contrat non chargé. Vérifiez MetaMask et le réseau Ganache."); return; }
     const res = await state.contract.methods.surface().call();
     setResult('Surface = ' + res.toString());
   };
   const afficheXY = async () => {
+    if (!state.contract) { setResult("Contrat non chargé. Vérifiez MetaMask et le réseau Ganache."); return; }
     const res = await state.contract.methods.afficheXY().call();
     setResult('Coordonnées : x=' + res[0] + ', y=' + res[1]);
   };
   const afficheInfos = async () => {
+    if (!state.contract) { setResult("Contrat non chargé. Vérifiez MetaMask et le réseau Ganache."); return; }
     const res = await state.contract.methods.afficheInfos().call();
     setResult(res);
   };
   const afficheLoLa = async () => {
+    if (!state.contract) { setResult("Contrat non chargé. Vérifiez MetaMask et le réseau Ganache."); return; }
     const res = await state.contract.methods.afficheLoLa().call();
     setResult('Longueur=' + res[0] + ', Largeur=' + res[1]);
   };
   const deplacerForme = async () => {
-    const { contract, account } = state;
-    const recu = await contract.methods.deplacerForme(dx, dy).send({ from: account });
-    setTransactions([recu, ...transactions]);
-    setResult('Forme déplacée de (' + dx + ', ' + dy + ')');
+    if (!state.contract) { setResult("Contrat non chargé. Vérifiez MetaMask et le réseau Ganache."); return; }
+    try {
+      const recu = await state.contract.methods.deplacerForme(dx, dy).send({ from: state.account });
+      setTransactions([recu, ...transactions]);
+      setResult('Forme déplacée de (' + dx + ', ' + dy + ')');
+    } catch (e) {
+      setResult('Transaction annulée ou échouée : ' + (e.message || e));
+    }
   };
 
   return (

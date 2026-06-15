@@ -3499,12 +3499,12 @@
     "1337": {
       "events": {},
       "links": {},
-      "address": "0x83b84bc6Fe68F3A0dE62D48d7E540Cf4Af7455b9",
-      "transactionHash": "0xbfc4b64aee9080ee37fd30f120c693aa4e642ba8c290e4bc197550a0a8eae05f"
+      "address": "0xC429bA87f04B72E1Ec0C0120aa244F46445Bc782",
+      "transactionHash": "0xdb33dc8a89763836a94058e60ae50cc991bd6a5e07e23657672777bc10947968"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2026-06-05T22:13:45.620Z",
+  "updatedAt": "2026-06-14T23:12:31.168Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

@@ -5171,12 +5171,12 @@
     "1337": {
       "events": {},
       "links": {},
-      "address": "0xb2Df590500bF16A7A2e455E69914D5e7C2e17B9D",
-      "transactionHash": "0x87af64823f2492f47041c56af2f0fd453d8c41596fc01e1bd9db55aa5da9b857"
+      "address": "0x14E43A3bE970Bce7135a329ABcBc4A1A47933704",
+      "transactionHash": "0x7d32167b300cfa657a6a00f757ffa141d92f5ae01e1a383379f2b722258efd0d"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2026-06-05T22:13:45.611Z",
+  "updatedAt": "2026-06-14T23:12:31.162Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

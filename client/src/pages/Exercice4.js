@@ -5,10 +5,10 @@ import Exercice4Contract from '../contracts/Exercice4.json';
 import BlockchainInfo from '../components/BlockchainInfo';
 
 function Exercice4() {
-  const [state, setState] = useState({ web3: null, contract: null });
+  const [state, setState] = useState({ web3: null, contract: null, account: null });
   const [nombre, setNombre] = useState('');
   const [result, setResult] = useState('');
-  const [transactions, setTransactions] = useState([]);
+  const [transactions] = useState([]);
 
   useEffect(() => {
     async function initWeb3() {
@@ -19,8 +19,18 @@ function Exercice4() {
       await window.ethereum.request({ method: 'eth_requestAccounts' });
       const instanceWeb3 = new Web3(window.ethereum);
       const accounts = await instanceWeb3.eth.getAccounts();
-      const networkId = await instanceWeb3.eth.net.getId();
-      const deployedNetwork = Exercice4Contract.networks[networkId];
+
+      const networkId = (await instanceWeb3.eth.net.getId()).toString();
+      let deployedNetwork = Exercice4Contract.networks[networkId];
+      if (!deployedNetwork) {
+        const ids = Object.keys(Exercice4Contract.networks);
+        if (ids.length === 0) {
+          setResult("Erreur : le contrat n'est pas déployé. Lancez 'truffle migrate --reset'.");
+          return;
+        }
+        deployedNetwork = Exercice4Contract.networks[ids[ids.length - 1]];
+      }
+
       const contract = new instanceWeb3.eth.Contract(Exercice4Contract.abi, deployedNetwork.address);
       setState({ web3: instanceWeb3, contract: contract, account: accounts[0] });
     }
@@ -28,6 +38,7 @@ function Exercice4() {
   }, []);
 
   const estPositif = async () => {
+    if (!state.contract) { setResult("Contrat non chargé. Vérifiez MetaMask et le réseau Ganache."); return; }
     const res = await state.contract.methods.estPositif(nombre).call();
     setResult(res ? 'Le nombre est POSITIF' : "Le nombre n'est PAS positif");
   };

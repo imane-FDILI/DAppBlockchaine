@@ -66,7 +66,7 @@ function Exercice6() {
           </div>
           <div className="exo-form" style={{ marginTop: '12px' }}>
             <input className="exo-input" type="number" placeholder="Indice" value={index} onChange={e => setIndex(e.target.value)} />
-            <button className="exo-btn" onClick={getElement}>Get élément</button>
+            <button className="exo-btn" onClick={getElement}> élément</button>
             <button className="exo-btn" onClick={afficheTableau}>Afficher tableau</button>
             <button className="exo-btn" onClick={calculerSomme}>Somme</button>
           </div>

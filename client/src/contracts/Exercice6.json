@@ -4271,12 +4271,12 @@
     "1337": {
       "events": {},
       "links": {},
-      "address": "0x148B249895CBe850a835afFECE7acc3e4FC84574",
-      "transactionHash": "0xcaa150e085d0e66d10b68c958d3d6360a38cf4ef4c0e5d5e176123377ed8f27d"
+      "address": "0x5E02a3E5AaB3cbC485adBc6e22f1552806a81165",
+      "transactionHash": "0xe810409e4b1347e1800950e1527b57949e1cffcdfb8b893f5a26a9591188e56a"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2026-06-05T22:13:45.603Z",
+  "updatedAt": "2026-06-14T23:12:31.157Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

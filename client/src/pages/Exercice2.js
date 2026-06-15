@@ -5,10 +5,10 @@ import Exercice2Contract from '../contracts/Exercice2.json';
 import BlockchainInfo from '../components/BlockchainInfo';
 
 function Exercice2() {
-  const [state, setState] = useState({ web3: null, contract: null });
+  const [state, setState] = useState({ web3: null, contract: null, account: null });
   const [montant, setMontant] = useState('');
   const [result, setResult] = useState('');
-  const [transactions, setTransactions] = useState([]);
+  const [transactions] = useState([]);
 
   useEffect(() => {
     async function initWeb3() {
@@ -19,8 +19,18 @@ function Exercice2() {
       await window.ethereum.request({ method: 'eth_requestAccounts' });
       const instanceWeb3 = new Web3(window.ethereum);
       const accounts = await instanceWeb3.eth.getAccounts();
-      const networkId = await instanceWeb3.eth.net.getId();
-      const deployedNetwork = Exercice2Contract.networks[networkId];
+
+      const networkId = (await instanceWeb3.eth.net.getId()).toString();
+      let deployedNetwork = Exercice2Contract.networks[networkId];
+      if (!deployedNetwork) {
+        const ids = Object.keys(Exercice2Contract.networks);
+        if (ids.length === 0) {
+          setResult("Erreur : le contrat n'est pas déployé. Lancez 'truffle migrate --reset'.");
+          return;
+        }
+        deployedNetwork = Exercice2Contract.networks[ids[ids.length - 1]];
+      }
+
       const contract = new instanceWeb3.eth.Contract(Exercice2Contract.abi, deployedNetwork.address);
       setState({ web3: instanceWeb3, contract: contract, account: accounts[0] });
     }
@@ -28,14 +38,14 @@ function Exercice2() {
   }, []);
 
   const etherEnWei = async () => {
-    const { contract } = state;
-    const res = await contract.methods.etherEnWei(montant).call();
+    if (!state.contract) { setResult("Contrat non chargé. Vérifiez MetaMask et le réseau Ganache."); return; }
+    const res = await state.contract.methods.etherEnWei(montant).call();
     setResult('Résultat : ' + res.toString() + ' Wei');
   };
 
   const weiEnEther = async () => {
-    const { contract } = state;
-    const res = await contract.methods.weiEnEther(montant).call();
+    if (!state.contract) { setResult("Contrat non chargé. Vérifiez MetaMask et le réseau Ganache."); return; }
+    const res = await state.contract.methods.weiEnEther(montant).call();
     setResult('Résultat : ' + res.toString() + ' Ether');
   };
 
@@ -72,7 +82,6 @@ function Exercice2() {
         <Link to="/exercices" className="exo-retour">← Exercices</Link>
       </div>
 
-      <BlockchainInfo web3={state.web3} transactions={transactions} />
     </div>
   );
 }

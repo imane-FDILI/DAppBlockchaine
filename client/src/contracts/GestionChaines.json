@@ -9417,12 +9417,12 @@
     "1337": {
       "events": {},
       "links": {},
-      "address": "0x77c182D46dA5293fE4002592946c28031BC1E14A",
-      "transactionHash": "0x1feba1ecf4c4b7eeeb0a62067341de7aa831f0d42f8bebecfa303165e3b6daba"
+      "address": "0x25700C7b3A627183395D3731A6454d8Eacf1C040",
+      "transactionHash": "0x57ff0727c5fe4f342a9ac650a5550530ba0501bd61b97f4620cc1410167327bc"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2026-06-05T22:13:45.586Z",
+  "updatedAt": "2026-06-14T23:12:31.143Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

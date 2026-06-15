@@ -1931,12 +1931,12 @@
     "1337": {
       "events": {},
       "links": {},
-      "address": "0x2700F8358EaAC10ABCd3763EaB8F90f65dd70851",
-      "transactionHash": "0xa6a7a271c8a4b71d351de3208feac2084806b0e822f7232d2ec73697640dec05"
+      "address": "0x0C343876C8bE7aB9c275F6fa83Cf0Db2dFc595B3",
+      "transactionHash": "0x219234f70eca6ae319827387ed860df05588dc3b01306fc3f4e299eb24d3bca1"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2026-06-05T22:13:45.579Z",
+  "updatedAt": "2026-06-14T23:12:31.136Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
